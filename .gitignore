@@ -1,0 +1,14 @@
+﻿.idea/*
+target/*
+.settings/*
+*.iml
+out/*
+gen/*
+bin/*
+*.class
+.classpath
+.project
+project.properties
+config_self.properties
+
+/target/

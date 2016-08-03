@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!--  3600秒重新加載文件 -->
+<Configuration status="WARN" monitorInterval="3600">
+
+	<!-- 使用tomcat启动参数catalina.base作为基础路径, app/runlog -->
+	<properties>
+	   <property name="runlog">${sys:catalina.base}/logs/runlog</property>
+	   <property name="busilog">${sys:catalina.base}/logs/busilog</property>
+	</properties>
+
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT"> 
+			<PatternLayout pattern="%d{ABSOLUTE} %5p %c{1}:%L - %m%n"/> 
+		</Console>
+
+		<RollingRandomAccessFile name="invokeDetailA" immediateFlush="false" fileName="${runlog}/invoke-detail.log"
+	                 filePattern="${runlog}/invoke-detail.log.%d{yyyy-MM-dd}" bufferSize="8192">
+			<PatternLayout>
+	        	<Pattern>%d{yyyy-MM-dd HH:mm:ss} %5p %c{1}\:%L - %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+		</RollingRandomAccessFile>
+		<RollingRandomAccessFile name="invokeDetailErrorA" immediateFlush="false" fileName="${runlog}/invoke-detail-error.log"
+	                 filePattern="${runlog}/invoke-detail-error.log.%d{yyyy-MM-dd}" bufferSize="8192">
+			<PatternLayout>
+	        	<Pattern>%d{yyyy-MM-dd HH:mm:ss} %5p %c{1}\:%L - %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy /> 
+			</Policies>
+		</RollingRandomAccessFile>
+		
+		<RollingRandomAccessFile name="invokeOutlineA" immediateFlush="false" fileName="${runlog}/invoke-outline.log"
+	                 filePattern="${runlog}/invoke-outline.log.%d{yyyy-MM-dd}" bufferSize="8192">
+			<PatternLayout>
+				<Pattern>%d{yyyy/MM/dd:}%m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy /> 
+			</Policies>
+		</RollingRandomAccessFile>
+		<RollingRandomAccessFile name="invokeLineA" immediateFlush="false" fileName="${runlog}/invoke-line.log"
+					 filePattern="${runlog}/invoke-line.log.%d{yyyy-MM-dd}" bufferSize="8192">
+			<PatternLayout>
+				<Pattern>%d{yyyy/MM/dd:}%m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+		</RollingRandomAccessFile>
+		<RollingRandomAccessFile name="springActionA" immediateFlush="false" fileName="${runlog}/spring-action.log"
+	                 filePattern="${runlog}/spring-action.log.%d{yyyy-MM-dd}" bufferSize="8192">
+			<PatternLayout>
+	        	<Pattern>%d{yyyy-MM-dd HH:mm:ss} %5p %c{1}\:%L - %m%n%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy /> 
+			</Policies>
+		</RollingRandomAccessFile>
+        <RollingRandomAccessFile name="AuthRequiredA" immediateFlush="false" fileName="${runlog}/spring-auth.log"
+                     filePattern="${runlog}/spring-auth.log.%d{yyyy-MM-dd}" bufferSize="8192">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %5p %c{1}\:%L - %m%n%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingRandomAccessFile>
+		<RollingRandomAccessFile name="runA" immediateFlush="false" fileName="${runlog}/run.log"
+	                 filePattern="${runlog}/run.log.%i" bufferSize="8192">
+			<PatternLayout>
+	        	<Pattern>%d{yyyy-MM-dd HH:mm:ss} \#%t\# [%-3p] %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="500MB"/>
+			</Policies>
+			<DefaultRolloverStrategy max="1"/>
+		</RollingRandomAccessFile>
+	</Appenders>
+ 
+	<Loggers>
+<!--   additivity="false" 只希望最低一层的子节点处理,不传递 -->
+        <AsyncLogger name="com.wzqj.compoent.client.log.AbstractLogItem" level="debug" additivity="false">
+            <AppenderRef ref="invokeDetailA"/>
+        </AsyncLogger>
+		<AsyncLogger name="com.wzqj.compoent.client.log.AbstractLogItem.invoke-outline" level="debug" additivity="false">
+			<AppenderRef ref="invokeOutlineA"/>
+		</AsyncLogger>
+		<AsyncLogger name="com.wzqj.compoent.client.log.AbstractLogItem.invoke-line" level="debug" additivity="false">
+			<AppenderRef ref="invokeLineA"/>
+		</AsyncLogger>
+		<AsyncLogger name="com.wzqj.compoent.client.log.AbstractLogItem.invoke-detail-error" level="debug" additivity="false">
+			<AppenderRef ref="invokeDetailErrorA"/>
+		</AsyncLogger>
+        <AsyncLogger name="com.wzqj.compoent.interceptor.LoggerInterceptor" level="debug" additivity="false">
+            <AppenderRef ref="springActionA"/>
+        </AsyncLogger>
+        <AsyncLogger name="com.wzqj.narcissus.common.interceptor.AuthRequiredInterceptor" level="debug" additivity="false">
+            <AppenderRef ref="AuthRequiredA"/>
+        </AsyncLogger>
+		<AsyncLogger name="run" level="debug" additivity="false">
+			<AppenderRef ref="runA"/>
+		</AsyncLogger>
+	    <Root level="info">
+			<AppenderRef ref="Console"/>
+	    </Root>
+  </Loggers>
+</Configuration>
+
+<!-- 异步日志调优:1.appender中设置immediateFlush="false"会减少IO但增加日志延迟 -->
+ 
+ 
